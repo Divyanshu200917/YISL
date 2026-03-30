@@ -135,8 +135,10 @@ document.addEventListener('DOMContentLoaded', function () {
         <a-box id="milkyway-btn" position="-3 0 0" depth="0.3" height="0.7" width="1.5" color="#1E90FF"></a-box>
         <a-text value="Milky Way" color="#fff" align="center" width="2" position="-3 0 0.2"></a-text>
         <a-box id="andromeda-btn" position="0 0 0" depth="0.3" height="0.7" width="1.5" color="#32CD32" class="clickable"></a-box>
+          <a-box id="andromeda-btn" position="0 0 0" depth="0.3" height="0.7" width="1.5" color="#32CD32" class="clickable" cursor="pointer"></a-box>
         <a-text value="Andromeda" color="#fff" align="center" width="2" position="0 0 0.2"></a-text>
         <a-box id="triangulum-btn" position="3 0 0" depth="0.3" height="0.7" width="1.5" color="#FF69B4" class="clickable"></a-box>
+          <a-box id="triangulum-btn" position="3 0 0" depth="0.3" height="0.7" width="1.5" color="#FF69B4" class="clickable" cursor="pointer"></a-box>
         <a-text value="Triangulum" color="#fff" align="center" width="2" position="3 0 0.2"></a-text>
         <a-box id="milkyway-btn" position="-3 0 0" depth="0.3" height="0.7" width="1.5" color="#1E90FF" class="clickable"></a-box>
       </a-entity>
@@ -167,6 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <!-- Back to Galaxy Selection -->
         <a-box id="back-galaxy-btn" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444"></a-box>
           <a-box id="back-galaxy-btn" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444" class="clickable"></a-box>
+          <a-box id="back-galaxy-btn" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444" class="clickable" cursor="pointer"></a-box>
         <a-text value="Back" color="#FFD700" width="1.5" position="0 0.2 -7.3"></a-text>
       </a-entity>
 
@@ -181,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <!-- Back to Galaxy Selection -->
         <a-box id="back-galaxy-btn-tria" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444"></a-box>
           <a-box id="back-galaxy-btn-tria" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444" class="clickable"></a-box>
+          <a-box id="back-galaxy-btn-tria" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444" class="clickable" cursor="pointer"></a-box>
         <a-text value="Back" color="#FFD700" width="1.5" position="0 0.2 -7.3"></a-text>
       </a-entity>
 
@@ -199,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
       <!-- Camera and Cursor for interaction -->
       <a-entity camera look-controls wasd-controls position="0 1.6 0">
         <a-cursor color="#FFD700" fuse="true"></a-cursor>
-        <a-entity raycaster="objects: .clickable"></a-entity>
+      </a-entity>
       </a-entity>
     </a-scene>
   <a-scene>
