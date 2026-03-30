@@ -1,146 +1,131 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Space & Earth VR Experience</title>
-    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-    <script>
-      // Earth environment data
-      const earthEnvs = [
-        { id: 'forest', name: 'Forest', color: '#228B22', desc: 'A lush green forest with tall trees and birds.' },
-        { id: 'desert', name: 'Desert', color: '#EDC9Af', desc: 'A vast desert with dunes and a hot sun.' },
-        { id: 'arctic', name: 'Arctic', color: '#B0E0E6', desc: 'A cold arctic with snow and icebergs.' },
-        { id: 'city', name: 'City', color: '#A9A9A9', desc: 'A bustling city with skyscrapers and lights.' }
-      ];
+<head>
+  <meta charset="utf-8">
+  <title>VR Earth & Galaxy Explorer</title>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
 
-      // Galaxy data (simplified)
-      const stars = [
-        { id: 'sol', name: 'Sun (Sol)', color: '#FFD700', planets: [
-          { id: 'earth', name: 'Earth', color: '#1e90ff', habitable: true },
-          { id: 'mars', name: 'Mars', color: '#c1440e', habitable: false },
-          { id: 'jupiter', name: 'Jupiter', color: '#e3aa6f', habitable: false }
-        ] },
-        { id: 'alpha-centauri', name: 'Alpha Centauri', color: '#fffacd', planets: [
-          { id: 'ac-b', name: 'AC-B', color: '#b0c4de', habitable: false }
-        ] }
-      ];
+  <script>
+    AFRAME.registerComponent('scene-controller', {
+      init: function () {
+        // UI Buttons
+        const btnSpace = document.querySelector('#btn-space');
+        const btnForest = document.querySelector('#btn-forest');
+        const btnVolcano = document.querySelector('#btn-volcano');
 
-      // Register a component for clickable interaction
-      AFRAME.registerComponent('clickable', {
-        init: function () {
-          this.el.addEventListener('mouseenter', () => this.el.setAttribute('scale', '1.2 1.2 1.2'));
-          this.el.addEventListener('mouseleave', () => this.el.setAttribute('scale', '1 1 1'));
-        }
-      });
+        // Environments
+        const earthEnv = document.querySelector('#earth-environment');
+        const spaceEnv = document.querySelector('#space-environment');
+        const mainSky = document.querySelector('#main-sky');
 
-      // Scene logic
-      document.addEventListener('DOMContentLoaded', function () {
-        // Earth environment selection
-        earthEnvs.forEach((env, i) => {
-          const btn = document.querySelector(`#earth-btn-${env.id}`);
-          btn.addEventListener('click', () => {
-            document.querySelector('#earth-env-title').setAttribute('value', env.name);
-            document.querySelector('#earth-env-desc').setAttribute('value', env.desc);
-            document.querySelector('#earth-env-bg').setAttribute('color', env.color);
+        // Switch to Space
+        btnSpace.addEventListener('click', () => {
+          earthEnv.setAttribute('visible', 'false');
+          spaceEnv.setAttribute('visible', 'true');
+          mainSky.setAttribute('color', '#020014'); // Deep space blue/black
+        });
+
+        // Switch to Earth: Forest
+        btnForest.addEventListener('click', () => {
+          earthEnv.setAttribute('visible', 'true');
+          earthEnv.setAttribute('environment', 'preset: forest');
+          spaceEnv.setAttribute('visible', 'false');
+          mainSky.setAttribute('color', '#87CEEB'); // Sky blue
+        });
+
+        // Switch to Earth: Volcano
+        btnVolcano.addEventListener('click', () => {
+          earthEnv.setAttribute('visible', 'true');
+          earthEnv.setAttribute('environment', 'preset: volcano');
+          spaceEnv.setAttribute('visible', 'false');
+          mainSky.setAttribute('color', '#87CEEB');
+        });
+
+        // Interactive Planets Logic
+        const planets = document.querySelectorAll('.planet');
+        const infoBoard = document.querySelector('#planet-info');
+        
+        planets.forEach(planet => {
+          planet.addEventListener('click', function() {
+            const name = this.getAttribute('data-name');
+            const type = this.getAttribute('data-type');
+            infoBoard.setAttribute('text', `value: Target: ${name}\nType: ${type}; color: white; align: center; width: 3`);
           });
         });
+      }
+    });
+  </script>
+</head>
+<body>
 
-        // Galaxy star selection
-        stars.forEach((star, i) => {
-          const starBtn = document.querySelector(`#star-btn-${star.id}`);
-          starBtn.addEventListener('click', () => {
-            // Hide all solar systems
-            document.querySelectorAll('.solar-system').forEach(e => e.setAttribute('visible', 'false'));
-            // Show selected solar system
-            document.querySelector(`#solar-${star.id}`).setAttribute('visible', 'true');
-          });
-        });
+  <a-scene scene-controller cursor="rayOrigin: mouse">
+    
+    <a-assets>
+      <a-mixin id="btn" geometry="primitive: plane; width: 1.5; height: 0.5" 
+               material="color: #333; opacity: 0.8" 
+               text="color: white; align: center; width: 4"
+               animation__hover="property: material.color; to: #555; startEvents: mouseenter; dur: 200"
+               animation__leave="property: material.color; to: #333; startEvents: mouseleave; dur: 200"
+               animation__click="property: scale; to: 0.9 0.9 0.9; startEvents: click; dur: 100; dir: alternate; loop: 1">
+      </a-mixin>
+    </a-assets>
 
-        // Planet info
-        stars.forEach(star => {
-          star.planets.forEach(planet => {
-            const planetBtn = document.querySelector(`#planet-btn-${planet.id}`);
-            if (planetBtn) {
-              planetBtn.addEventListener('click', () => {
-                document.querySelector('#planet-info-title').setAttribute('value', planet.name);
-                document.querySelector('#planet-info-desc').setAttribute('value', planet.habitable ? 'Habitable planet.' : 'Inhabitable planet.');
-                document.querySelector('#planet-info-bg').setAttribute('color', planet.color);
-                document.querySelector('#planet-info-panel').setAttribute('visible', 'true');
-              });
-            }
-          });
-        });
-        // Close planet info
-        document.querySelector('#close-planet-info').addEventListener('click', () => {
-          document.querySelector('#planet-info-panel').setAttribute('visible', 'false');
-        });
-      });
-    </script>
-  </head>
-  <body>
-    <a-scene>
-      <!-- Earth Experience Module -->
-      <a-entity id="earth-experience" position="-8 1.5 -8">
-        <a-sky id="earth-env-bg" color="#228B22"></a-sky>
-        <a-plane position="0 0 -4" rotation="-90 0 0" width="8" height="8" color="#7BC8A4"></a-plane>
-        <a-text id="earth-env-title" value="Forest" color="#fff" position="0 3 -4" align="center" width="6"></a-text>
-        <a-text id="earth-env-desc" value="A lush green forest with tall trees and birds." color="#fff" position="0 2.5 -4" align="center" width="6"></a-text>
-        <!-- Earth environment buttons -->
-        <a-entity position="0 1.2 -3.5">
-          <a-box id="earth-btn-forest" clickable color="#228B22" position="-3 0 0" width="1" height="0.5" depth="0.5"></a-box>
-          <a-text value="Forest" color="#fff" position="-3 0.4 0.3" width="2"></a-text>
-          <a-box id="earth-btn-desert" clickable color="#EDC9Af" position="-1 0 0" width="1" height="0.5" depth="0.5"></a-box>
-          <a-text value="Desert" color="#fff" position="-1 0.4 0.3" width="2"></a-text>
-          <a-box id="earth-btn-arctic" clickable color="#B0E0E6" position="1 0 0" width="1" height="0.5" depth="0.5"></a-box>
-          <a-text value="Arctic" color="#333" position="1 0.4 0.3" width="2"></a-text>
-          <a-box id="earth-btn-city" clickable color="#A9A9A9" position="3 0 0" width="1" height="0.5" depth="0.5"></a-box>
-          <a-text value="City" color="#fff" position="3 0.4 0.3" width="2"></a-text>
+    <a-entity position="0 1.6 0">
+      <a-camera>
+        <a-cursor raycaster="objects: .clickable" color="#FFF" 
+                  animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150">
+        </a-cursor>
+      </a-camera>
+    </a-entity>
+
+    <a-sky id="main-sky" color="#87CEEB" transition="color 2000ms"></a-sky>
+
+    <a-entity position="0 1.5 -3">
+      <a-entity id="btn-forest" mixin="btn" class="clickable" text="value: Earth: Forest" position="-1.7 0 0"></a-entity>
+      <a-entity id="btn-volcano" mixin="btn" class="clickable" text="value: Earth: Volcano" position="0 0 0"></a-entity>
+      <a-entity id="btn-space" mixin="btn" class="clickable" text="value: Milky Way Galaxy" position="1.7 0 0"></a-entity>
+    </a-entity>
+
+    <a-entity id="earth-environment" environment="preset: forest; skyType: atmosphere; lighting: distant" visible="true"></a-entity>
+
+    <a-entity id="space-environment" visible="false">
+      
+      <a-entity star-system="count: 1000; radius: 250; depth: 0"></a-entity>
+
+      <a-entity id="planet-info" position="0 2.5 -4" text="value: Select a celestial body...; color: white; align: center; width: 4"></a-entity>
+
+      <a-entity position="0 1 -8">
+        
+        <a-sphere class="clickable planet" data-name="The Sun" data-type="Yellow Dwarf Star" 
+                  radius="2" color="#FDB813" material="shader: flat"
+                  animation__pulse="property: scale; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 2000">
+          <a-light type="point" color="#FFF" intensity="2" distance="50"></a-light>
+        </a-sphere>
+
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
+          <a-sphere class="clickable planet" data-name="Terra Nova" data-type="Habitable Planet"
+                    position="4 0 0" radius="0.5" color="#2E8B57"
+                    animation__hover="property: scale; to: 1.3 1.3 1.3; startEvents: mouseenter; dur: 200"
+                    animation__leave="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+            <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 3000; easing: linear">
+              <a-sphere position="0.8 0 0" radius="0.1" color="#CCC"></a-sphere>
+            </a-entity>
+          </a-sphere>
         </a-entity>
-      </a-entity>
 
-      <!-- Galaxy Exploration Module -->
-      <a-entity id="galaxy-experience" position="8 1.5 -8">
-        <a-sky color="#000010"></a-sky>
-        <a-entity id="milkyway-galaxy">
-          <a-text value="Milky Way Galaxy" color="#FFD700" position="0 3 -4" align="center" width="8"></a-text>
-          <!-- Star selection -->
-          <a-entity position="0 2 -4">
-            <a-sphere id="star-btn-sol" clickable color="#FFD700" position="-2 0 0" radius="0.4"></a-sphere>
-            <a-text value="Sun" color="#fff" position="-2 0.6 0.2" width="2"></a-text>
-            <a-sphere id="star-btn-alpha-centauri" clickable color="#fffacd" position="2 0 0" radius="0.4"></a-sphere>
-            <a-text value="Alpha Centauri" color="#fff" position="2 0.6 0.2" width="3"></a-text>
-          </a-entity>
-          <!-- Solar systems (hidden by default, shown on star select) -->
-          <a-entity id="solar-sol" class="solar-system" visible="false">
-            <a-text value="Solar System" color="#FFD700" position="0 1.5 -2" align="center" width="6"></a-text>
-            <a-sphere id="planet-btn-earth" clickable color="#1e90ff" position="-1 1.2 -2" radius="0.25"></a-sphere>
-            <a-text value="Earth" color="#fff" position="-1 1.6 -1.7" width="2"></a-text>
-            <a-sphere id="planet-btn-mars" clickable color="#c1440e" position="0 1.1 -2" radius="0.18"></a-sphere>
-            <a-text value="Mars" color="#fff" position="0 1.5 -1.7" width="2"></a-text>
-            <a-sphere id="planet-btn-jupiter" clickable color="#e3aa6f" position="1 1.3 -2" radius="0.35"></a-sphere>
-            <a-text value="Jupiter" color="#fff" position="1 1.7 -1.7" width="2"></a-text>
-          </a-entity>
-          <a-entity id="solar-alpha-centauri" class="solar-system" visible="false">
-            <a-text value="Alpha Centauri System" color="#FFD700" position="0 1.5 -2" align="center" width="6"></a-text>
-            <a-sphere id="planet-btn-ac-b" clickable color="#b0c4de" position="0 1.2 -2" radius="0.22"></a-sphere>
-            <a-text value="AC-B" color="#fff" position="0 1.6 -1.7" width="2"></a-text>
-          </a-entity>
+        <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear">
+          <a-sphere class="clickable planet" data-name="Crimson Giant" data-type="Inhabitable Gas Giant"
+                    position="7 0 0" radius="1.2" color="#DC143C"
+                    animation__hover="property: scale; to: 1.2 1.2 1.2; startEvents: mouseenter; dur: 200"
+                    animation__leave="property: scale; to: 1 1 1; startEvents: mouseleave; dur: 200">
+             <a-ring color="#FFA07A" radius-inner="1.5" radius-outer="2" rotation="-70 0 0" material="side: double; opacity: 0.7"></a-ring>
+          </a-sphere>
         </a-entity>
-      </a-entity>
 
-      <!-- Planet Info Panel -->
-      <a-entity id="planet-info-panel" visible="false" position="0 2 -3">
-        <a-plane id="planet-info-bg" width="3.5" height="2.2" color="#222" opacity="0.95"></a-plane>
-        <a-text id="planet-info-title" value="" color="#FFD700" width="3" position="0 0.7 0"></a-text>
-        <a-text id="planet-info-desc" value="" color="#fff" width="3.2" position="0 0 0" wrap-count="40"></a-text>
-        <a-box id="close-planet-info" position="1.5 0.8 0.1" width="0.3" height="0.3" depth="0.1" color="#c00" clickable></a-box>
-        <a-text value="X" color="#fff" width="0.5" position="1.5 0.8 0.2"></a-text>
       </a-entity>
+    </a-entity>
 
-      <!-- Camera and Cursor -->
-      <a-entity camera look-controls wasd-controls position="0 1.6 0" raycaster="objects: [clickable]">
-        <a-cursor color="#FFD700" fuse="true"></a-cursor>
-      </a-entity>
-    </a-scene>
-  </body>
+  </a-scene>
+</body>
 </html>
