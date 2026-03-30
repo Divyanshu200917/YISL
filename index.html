@@ -1,22 +1,217 @@
+<!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8" />
-  <title>Presenting Abhinav Mishra</title>
+  <title>Young Innovators STEM Lab</title>
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
 </head>
 
+// Starfield generator
+// ...existing code...
+      star.setAttribute('opacity', Math.random() * 0.5 + 0.5);
+      this.el.appendChild(star);
+    }
+  }
+});
+
+// Galaxy and planet interaction logic
+document.addEventListener('DOMContentLoaded', function () {
+  // Starfield
+  document.querySelector('#stars').setAttribute('starfield', '');
+
+  // Galaxy selection
+  const menu = document.querySelector('#menu');
+  const solarSystem = document.querySelector('#solar-system');
+  const triangulumSystem = document.querySelector('#triangulum-system');
+  const planetInfo = document.querySelector('#planet-info');
+  const planetTitle = document.querySelector('#planet-title');
+  const planetDesc = document.querySelector('#planet-desc');
+  const closeInfo = document.querySelector('#close-info');
+
+  // Galaxy buttons
+  document.querySelector('#milkyway-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'false');
+    solarSystem.setAttribute('visible', 'true');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+  document.querySelector('#andromeda-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'false');
+    solarSystem.setAttribute('visible', 'true');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+  document.querySelector('#triangulum-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'false');
+    solarSystem.setAttribute('visible', 'false');
+    triangulumSystem.setAttribute('visible', 'true');
+  });
+
+  // Back buttons
+  document.querySelector('#back-galaxy-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'true');
+    solarSystem.setAttribute('visible', 'false');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+  document.querySelector('#back-galaxy-btn-tria').addEventListener('click', () => {
+    menu.setAttribute('visible', 'true');
+    solarSystem.setAttribute('visible', 'false');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+
+  // Triangulum planet info (placeholder)
+  document.querySelector('#tria-planet1').addEventListener('click', () => {
+    planetTitle.setAttribute('value', 'Planet A');
+    planetDesc.setAttribute('value', 'A mysterious planet in the Triangulum galaxy.');
+    planetInfo.setAttribute('visible', 'true');
+  });
+  document.querySelector('#tria-planet2').addEventListener('click', () => {
+    planetTitle.setAttribute('value', 'Planet B');
+    planetDesc.setAttribute('value', 'Another world in Triangulum, waiting to be explored.');
+    planetInfo.setAttribute('visible', 'true');
+  });
+
+  // Planet data
+  const planetData = {
+    mercury: {
+      title: 'Mercury',
+      desc: 'Smallest planet, closest to the Sun. No atmosphere, extreme temperatures.'
+    },
+    venus: {
+      title: 'Venus',
+      desc: 'Thick toxic atmosphere, hottest planet, similar size to Earth.'
+    },
+    earth: {
+      title: 'Earth',
+      desc: 'Our home planet, only known planet with life and liquid water.'
+    },
+    mars: {
+      title: 'Mars',
+      desc: 'The Red Planet, thin atmosphere, evidence of ancient water.'
+    },
+    jupiter: {
+      title: 'Jupiter',
+      desc: 'Largest planet, gas giant, famous for its Great Red Spot.'
+    },
+    saturn: {
+      title: 'Saturn',
+      desc: 'Gas giant with spectacular ring system.'
+    },
+    uranus: {
+      title: 'Uranus',
+      desc: 'Ice giant, rotates on its side, pale blue color.'
+    },
+    neptune: {
+      title: 'Neptune',
+      desc: 'Farthest planet, deep blue color, strong winds.'
+    }
+  };
+
+  // Add click listeners to planets
+  Object.keys(planetData).forEach(id => {
+    const planet = document.querySelector(`#${id}`);
+    if (planet) {
+      planet.addEventListener('click', () => {
+        planetTitle.setAttribute('value', planetData[id].title);
+        planetDesc.setAttribute('value', planetData[id].desc);
+        planetInfo.setAttribute('visible', 'true');
+      });
+    }
+  });
+
+  // Close info panel
+  closeInfo.addEventListener('click', () => {
+    planetInfo.setAttribute('visible', 'false');
+  });
+});
+</script>
+</head>
+
 <body>
+    <a-scene>
+      <a-sky color="#000010"></a-sky>
+      <!-- Galaxy Selection Menu -->
+      <a-entity id="menu" position="0 2 -4">
+        <a-text value="Choose a Galaxy:" color="#FFD700" align="center" width="6" position="0 1 0"></a-text>
+        <a-box id="milkyway-btn" position="-3 0 0" depth="0.3" height="0.7" width="1.5" color="#1E90FF"></a-box>
+        <a-text value="Milky Way" color="#fff" align="center" width="2" position="-3 0 0.2"></a-text>
+        <a-box id="andromeda-btn" position="0 0 0" depth="0.3" height="0.7" width="1.5" color="#32CD32" class="clickable"></a-box>
+        <a-text value="Andromeda" color="#fff" align="center" width="2" position="0 0 0.2"></a-text>
+        <a-box id="triangulum-btn" position="3 0 0" depth="0.3" height="0.7" width="1.5" color="#FF69B4" class="clickable"></a-box>
+        <a-text value="Triangulum" color="#fff" align="center" width="2" position="3 0 0.2"></a-text>
+        <a-box id="milkyway-btn" position="-3 0 0" depth="0.3" height="0.7" width="1.5" color="#1E90FF" class="clickable"></a-box>
+      </a-entity>
+
+      <!-- Solar System (hidden by default, shown on selection) -->
+      <a-entity id="solar-system" visible="false">
+        <a-text value="Solar System" color="#FFD700" align="center" width="6" position="0 3 -8"></a-text>
+        <!-- Sun -->
+        <a-sphere position="0 2 -10" radius="1.2" color="#FFD700" emissive="#FFD700"></a-sphere>
+        <!-- Planets -->
+        <a-sphere id="mercury" position="-3 1.5 -8" radius="0.15" color="#b1b1b1"></a-sphere>
+        <a-sphere id="venus" position="-2.2 1.7 -8" radius="0.22" color="#e6c200"></a-sphere>
+        <a-sphere id="earth" position="-1.2 2 -8" radius="0.25" color="#1e90ff"></a-sphere>
+        <a-sphere id="mars" position="-0.2 1.8 -8" radius="0.18" color="#c1440e"></a-sphere>
+        <a-sphere id="jupiter" position="1.2 2.3 -8" radius="0.5" color="#e3aa6f"></a-sphere>
+        <a-sphere id="saturn" position="2.5 2.1 -8" radius="0.45" color="#e5c96f"></a-sphere>
+        <a-sphere id="uranus" position="3.5 1.9 -8" radius="0.3" color="#7fffd4"></a-sphere>
+        <a-sphere id="neptune" position="4.3 1.7 -8" radius="0.28" color="#4169e1"></a-sphere>
+        <!-- Planet Labels -->
+        <a-text value="Mercury" color="#fff" width="1.5" position="-3 1.2 -8"></a-text>
+        <a-text value="Venus" color="#fff" width="1.5" position="-2.2 1.4 -8"></a-text>
+        <a-text value="Earth" color="#fff" width="1.5" position="-1.2 1.7 -8"></a-text>
+        <a-text value="Mars" color="#fff" width="1.5" position="-0.2 1.5 -8"></a-text>
+        <a-text value="Jupiter" color="#fff" width="1.5" position="1.2 2 -8"></a-text>
+        <a-text value="Saturn" color="#fff" width="1.5" position="2.5 1.8 -8"></a-text>
+        <a-text value="Uranus" color="#fff" width="1.5" position="3.5 1.6 -8"></a-text>
+        <a-text value="Neptune" color="#fff" width="1.5" position="4.3 1.4 -8"></a-text>
+        <!-- Back to Galaxy Selection -->
+        <a-box id="back-galaxy-btn" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444"></a-box>
+          <a-box id="back-galaxy-btn" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444" class="clickable"></a-box>
+        <a-text value="Back" color="#FFD700" width="1.5" position="0 0.2 -7.3"></a-text>
+      </a-entity>
+
+      <!-- Triangulum System (placeholder, hidden by default) -->
+      <a-entity id="triangulum-system" visible="false">
+        <a-text value="Triangulum System" color="#FFD700" align="center" width="6" position="0 3 -8"></a-text>
+        <a-sphere position="0 2 -10" radius="1.1" color="#FF69B4" emissive="#FF69B4"></a-sphere>
+        <a-sphere id="tria-planet1" position="-1.5 1.7 -8" radius="0.3" color="#8ecae6"></a-sphere>
+        <a-sphere id="tria-planet2" position="1.5 2.1 -8" radius="0.4" color="#ffb703"></a-sphere>
+        <a-text value="Planet A" color="#fff" width="1.5" position="-1.5 1.4 -8"></a-text>
+        <a-text value="Planet B" color="#fff" width="1.5" position="1.5 1.8 -8"></a-text>
+        <!-- Back to Galaxy Selection -->
+        <a-box id="back-galaxy-btn-tria" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444"></a-box>
+          <a-box id="back-galaxy-btn-tria" position="0 0.2 -7.5" width="1.2" height="0.4" depth="0.2" color="#444" class="clickable"></a-box>
+        <a-text value="Back" color="#FFD700" width="1.5" position="0 0.2 -7.3"></a-text>
+      </a-entity>
+
+      <!-- Planet Environment Info Panel (hidden by default) -->
+      <a-entity id="planet-info" visible="false" position="0 1.5 -3">
+        <a-plane width="3.5" height="2.2" color="#222" opacity="0.95"></a-plane>
+        <a-text id="planet-title" value="" color="#FFD700" width="3" position="0 0.7 0"></a-text>
+        <a-text id="planet-desc" value="" color="#fff" width="3.2" position="0 0 0" wrap-count="40"></a-text>
+        <a-box id="close-info" position="1.5 0.8 0.1" width="0.3" height="0.3" depth="0.1" color="#c00"></a-box>
+        <a-text value="X" color="#fff" width="0.5" position="1.5 0.8 0.2"></a-text>
+      </a-entity>
+
+      <!-- Stars -->
+      <a-entity id="stars"></a-entity>
+
+      <!-- Camera and Cursor for interaction -->
+      <a-entity camera look-controls wasd-controls position="0 1.6 0">
+        <a-cursor color="#FFD700" fuse="true"></a-cursor>
+        <a-entity raycaster="objects: .clickable"></a-entity>
+      </a-entity>
+    </a-scene>
   <a-scene>
 
-    <a-sky color="blue"></a-sky>
-    <a-box position="-1 -0.5 0 " rotation="0 45 0" color="#4CC3D9"></a-box>
+    <a-sky color="purple"></a-sky>
+    <a-box position="-1 -0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
     <a-sphere position="0 0.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
     <a-cylinder position="1 -0.25 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
     <a-plane position="0 -1 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
     
-    <a-image src="./yes.jpg" position="0 5 -10"
-      width="27" height="48"></a-image>
+    <a-image src="https://raw.githubusercontent.com/alluringxstalwart/SourceYISL/main/Landscape.png" position="0 5 -10"
+      width="25" height="7.5"></a-image>
     
     <a-text value="Young Innovators STEM Lab" position="0 9.5 -10" align="center" color="white" font="mozillavr"
       width="10" height="5" anchor="center">
@@ -24,6 +219,202 @@
 
 
   </a-scene>
+</body>
+
+</html><!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Young Innovators STEM Lab</title>
+  <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+</head>
+
+<body>
+  <a-scene>
+    <!-- VR Space Environment -->
+    <a-sky color="#000010"></a-sky>
+    <!-- Galaxy Selection Menu -->
+    <a-entity id="menu" position="0 2 -4">
+      <a-text value="Choose a Galaxy:" color="#FFD700" align="center" width="6" position="0 1 0"></a-text>
+      <a-box id="milkyway-btn" position="-2 0 0" depth="0.3" height="0.7" width="1.5" color="#1E90FF"></a-box>
+      <a-text value="Milky Way" color="#fff" align="center" width="2" position="-2 0 0.2"></a-text>
+      <a-box id="andromeda-btn" position="2 0 0" depth="0.3" height="0.7" width="1.5" color="#32CD32"></a-box>
+      <a-text value="Andromeda" color="#fff" align="center" width="2" position="2 0 0.2"></a-text>
+    </a-entity>
+
+    <!-- Solar System (hidden by default, shown on selection) -->
+    <a-entity id="solar-system" visible="false">
+      <a-text value="Solar System" color="#FFD700" align="center" width="6" position="0 3 -8"></a-text>
+      <!-- Sun -->
+      <a-sphere position="0 2 -10" radius="1.2" color="#FFD700" emissive="#FFD700"></a-sphere>
+      <!-- Planets -->
+      <a-sphere id="mercury" position="-3 1.5 -8" radius="0.15" color="#b1b1b1"></a-sphere>
+      <a-sphere id="venus" position="-2.2 1.7 -8" radius="0.22" color="#e6c200"></a-sphere>
+      <a-sphere id="earth" position="-1.2 2 -8" radius="0.25" color="#1e90ff"></a-sphere>
+      <a-sphere id="mars" position="-0.2 1.8 -8" radius="0.18" color="#c1440e"></a-sphere>
+      <a-sphere id="jupiter" position="1.2 2.3 -8" radius="0.5" color="#e3aa6f"></a-sphere>
+      <a-sphere id="saturn" position="2.5 2.1 -8" radius="0.45" color="#e5c96f"></a-sphere>
+      <a-sphere id="uranus" position="3.5 1.9 -8" radius="0.3" color="#7fffd4"></a-sphere>
+      <a-sphere id="neptune" position="4.3 1.7 -8" radius="0.28" color="#4169e1"></a-sphere>
+      <!-- Planet Labels -->
+      <a-text value="Mercury" color="#fff" width="1.5" position="-3 1.2 -8"></a-text>
+      <a-text value="Venus" color="#fff" width="1.5" position="-2.2 1.4 -8"></a-text>
+      <a-text value="Earth" color="#fff" width="1.5" position="-1.2 1.7 -8"></a-text>
+      <a-text value="Mars" color="#fff" width="1.5" position="-0.2 1.5 -8"></a-text>
+      <a-text value="Jupiter" color="#fff" width="1.5" position="1.2 2 -8"></a-text>
+      <a-text value="Saturn" color="#fff" width="1.5" position="2.5 1.8 -8"></a-text>
+      <a-text value="Uranus" color="#fff" width="1.5" position="3.5 1.6 -8"></a-text>
+      <a-text value="Neptune" color="#fff" width="1.5" position="4.3 1.4 -8"></a-text>
+    </a-entity>
+
+    <!-- Planet Environment Info Panel (hidden by default) -->
+    <a-entity id="planet-info" visible="false" position="0 1.5 -3">
+      <a-plane width="3.5" height="2.2" color="#222" opacity="0.95"></a-plane>
+      <a-text id="planet-title" value="" color="#FFD700" width="3" position="0 0.7 0"></a-text>
+      <a-text id="planet-desc" value="" color="#fff" width="3.2" position="0 0 0" wrap-count="40"></a-text>
+      <a-box id="close-info" position="1.5 0.8 0.1" width="0.3" height="0.3" depth="0.1" color="#c00"></a-box>
+      <a-text value="X" color="#fff" width="0.5" position="1.5 0.8 0.2"></a-text>
+    </a-entity>
+
+    <!-- Stars -->
+    <a-entity id="stars"></a-entity>
+
+    <!-- Camera and Cursor for interaction -->
+    <a-entity camera look-controls wasd-controls position="0 1.6 0">
+      <a-cursor color="#FFD700"></a-cursor>
+    </a-entity>
+  </a-scene>
+
+  <script>
+// Starfield generator
+AFRAME.registerComponent('starfield', {
+  init: function () {
+    const starCount = 300;
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('a-sphere');
+      star.setAttribute('radius', Math.random() * 0.05 + 0.01);
+      star.setAttribute('color', '#fff');
+      star.setAttribute('position', [
+        (Math.random() - 0.5) * 60,
+        Math.random() * 20 + 1,
+        -Math.random() * 60 - 5
+      ].join(' '));
+      star.setAttribute('opacity', Math.random() * 0.5 + 0.5);
+      this.el.appendChild(star);
+    }
+  }
+});
+
+// Galaxy and planet interaction logic
+document.addEventListener('DOMContentLoaded', function () {
+  // Starfield
+  document.querySelector('#stars').setAttribute('starfield', '');
+
+  // Galaxy selection
+  const menu = document.querySelector('#menu');
+  const solarSystem = document.querySelector('#solar-system');
+  const triangulumSystem = document.querySelector('#triangulum-system');
+  const planetInfo = document.querySelector('#planet-info');
+  const planetTitle = document.querySelector('#planet-title');
+  const planetDesc = document.querySelector('#planet-desc');
+  const closeInfo = document.querySelector('#close-info');
+
+  // Galaxy buttons
+  document.querySelector('#milkyway-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'false');
+    solarSystem.setAttribute('visible', 'true');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+  document.querySelector('#andromeda-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'false');
+    solarSystem.setAttribute('visible', 'true');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+  document.querySelector('#triangulum-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'false');
+    solarSystem.setAttribute('visible', 'false');
+    triangulumSystem.setAttribute('visible', 'true');
+  });
+
+  // Back buttons
+  document.querySelector('#back-galaxy-btn').addEventListener('click', () => {
+    menu.setAttribute('visible', 'true');
+    solarSystem.setAttribute('visible', 'false');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+  document.querySelector('#back-galaxy-btn-tria').addEventListener('click', () => {
+    menu.setAttribute('visible', 'true');
+    solarSystem.setAttribute('visible', 'false');
+    triangulumSystem.setAttribute('visible', 'false');
+  });
+
+  // Planet data
+  const planetData = {
+    mercury: {
+      title: 'Mercury',
+      desc: 'Smallest planet, closest to the Sun. No atmosphere, extreme temperatures.'
+    },
+    venus: {
+      title: 'Venus',
+      desc: 'Thick toxic atmosphere, hottest planet, similar size to Earth.'
+    },
+    earth: {
+      title: 'Earth',
+      desc: 'Our home planet, only known planet with life and liquid water.'
+    },
+    mars: {
+      title: 'Mars',
+      desc: 'The Red Planet, thin atmosphere, evidence of ancient water.'
+    },
+    jupiter: {
+      title: 'Jupiter',
+      desc: 'Largest planet, gas giant, famous for its Great Red Spot.'
+    },
+    saturn: {
+      title: 'Saturn',
+      desc: 'Gas giant with spectacular ring system.'
+    },
+    uranus: {
+      title: 'Uranus',
+      desc: 'Ice giant, rotates on its side, pale blue color.'
+    },
+    neptune: {
+      title: 'Neptune',
+      desc: 'Farthest planet, deep blue color, strong winds.'
+    }
+  };
+
+  // Add click listeners to planets
+  Object.keys(planetData).forEach(id => {
+    const planet = document.querySelector(`#${id}`);
+    if (planet) {
+      planet.addEventListener('click', () => {
+        planetTitle.setAttribute('value', planetData[id].title);
+        planetDesc.setAttribute('value', planetData[id].desc);
+        planetInfo.setAttribute('visible', 'true');
+      });
+    }
+  });
+
+  // Triangulum planet info (placeholder)
+  document.querySelector('#tria-planet1').addEventListener('click', () => {
+    planetTitle.setAttribute('value', 'Planet A');
+    planetDesc.setAttribute('value', 'A mysterious planet in the Triangulum galaxy.');
+    planetInfo.setAttribute('visible', 'true');
+  });
+  document.querySelector('#tria-planet2').addEventListener('click', () => {
+    planetTitle.setAttribute('value', 'Planet B');
+    planetDesc.setAttribute('value', 'Another world in Triangulum, waiting to be explored.');
+    planetInfo.setAttribute('visible', 'true');
+  });
+
+  // Close info panel
+  closeInfo.addEventListener('click', () => {
+    planetInfo.setAttribute('visible', 'false');
+  });
+});
+  </script>
 </body>
 
 </html>
